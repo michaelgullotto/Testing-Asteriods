@@ -1,13 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 
 public class testsuite
 {
-    
-
+    //public Player Player;
     [UnityTest]
     public IEnumerator AsteriodsSpawns()
     {
@@ -18,7 +19,9 @@ public class testsuite
         yield return new WaitForSeconds(5f);
 
         UnityEngine.Assertions.Assert.IsNotNull(asteriod);
-
+        
+        
+        //MonoBehaviour.Destroy(spawner);
     }
 
     [UnityTest]
@@ -37,7 +40,8 @@ public class testsuite
             moved = true;
         }
         UnityEngine.Assertions.Assert.IsTrue(moved);
-
+        
+        //MonoBehaviour.Destroy(spawner);
     }
 
     [UnityTest]
@@ -46,61 +50,68 @@ public class testsuite
         
         bool notFullLife = false;
         int startHealth = 3;
-        //MonoBehaviour.Instantiate(Resources.Load("GameOverPanel"));
+     
         Player player = MonoBehaviour.Instantiate(Resources.Load<Player>("player"));
         Spawner spawner = MonoBehaviour.Instantiate(Resources.Load<Spawner>("spawner"));
-        Player.testing = true;
+        player.testing = true;
         GameObject asteriod = spawner.testAsteriod();
         
-        yield return new WaitForSecondsRealtime(2);
-        asteriod.transform.position = player.transform.position;
-        yield return new WaitForSecondsRealtime(3);
+        Debug.Log(player.life.ToString());
        
-        if (startHealth > Player.life)
+        yield return new WaitForSecondsRealtime(5);
+        asteriod.transform.position = player.transform.position;
+        
+        Debug.Log(player.life.ToString());
+
+        yield return new WaitForSecondsRealtime(3);
+        
+        if (startHealth > player.life)
         {
             notFullLife = true;
         }
     
         UnityEngine.Assertions.Assert.IsTrue(notFullLife);
-
+        MonoBehaviour.Destroy(player);
+        MonoBehaviour.Destroy(spawner);
+        
     }
 
     [UnityTest]
     public IEnumerator PlayerDies()
     {
-        
         bool isdeadTest = false;
         Player player = MonoBehaviour.Instantiate(Resources.Load<Player>("player"));
-        Player.testing = true;
-        Player.life = 0;
-        yield return new WaitForSecondsRealtime(3);
-        
-        
-        if (Player.isDead)
+        player.testing = true;
+        player.life = 0;
+        yield return new WaitForSecondsRealtime(1);
+
+        if (player.isDead)
         {
             isdeadTest = true;
         }
+        
         UnityEngine.Assertions.Assert.IsTrue(isdeadTest);
+        MonoBehaviour.Destroy(player);
     }
     [UnityTest]
     public IEnumerator GameRestartsOnDeath()
     {
-        
-        bool Respawned = false;
+        bool notRespawned = true;
         Player player = MonoBehaviour.Instantiate(Resources.Load<Player>("player"));
-        Player.testing = true;
-        yield return new WaitForSecondsRealtime(3);
-        Player.life = 0;
-        yield return new WaitForSecondsRealtime(3);
+        player.testing = true;
+        yield return new WaitForSecondsRealtime(1);
+        player.life = 0;
+        yield return new WaitForSecondsRealtime(1);
         player.RestartGame();
-        yield return new WaitForSecondsRealtime(3);
-        if (!Player.isDead && Time.timeScale == 1)
+        yield return new WaitForSecondsRealtime(1);
+        if (!player.isDead)
         {
-            Respawned = true;
+            notRespawned = false;
         }
     
-        UnityEngine.Assertions.Assert.IsTrue(Respawned);
+        UnityEngine.Assertions.Assert.IsFalse(notRespawned); 
+        
+        MonoBehaviour.Destroy(player);
     }
-    
     
 }

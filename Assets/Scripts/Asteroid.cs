@@ -52,9 +52,11 @@ public class Asteroid : MonoBehaviour
             Destroy(this.gameObject);
             Player.score++;
         }
-        if (collision.gameObject.tag == "P")
+        
+        Player player = collision.gameObject.GetComponent<Player>();
+        if (player!= null)
         {
-            Player.life = Player.life - 1;
+            player.life = player.life - 1;
             Destroy(this.gameObject);
         }
     }
@@ -65,7 +67,6 @@ public class Asteroid : MonoBehaviour
         Asteroid half = Instantiate(this, postion, this.transform.rotation);
         half.size = this.size * 0.5f;
         SetTrajectort(Random.insideUnitCircle.normalized * this.speed);
- 
     }
 
   
@@ -73,4 +74,6 @@ public class Asteroid : MonoBehaviour
     {
         return SpawnedAsteriod;
     }
+
+    
 }

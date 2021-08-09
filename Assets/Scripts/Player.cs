@@ -10,16 +10,16 @@ public class Player : MonoBehaviour
     public GameObject lifeText;
     public GameObject scoreText;
     static public int score = 0;
-    static public int life = 3;
+    public int life = 3;
     public Bullet bulletPrefab;
     float turnSpeed = 1.0f;
     float thrustSpeed = 3.5f;
-    static public bool isDead = false;
+    public bool isDead = false;
     Rigidbody2D _rigidbody;
     bool _thrusting;
     bool _reversing;
     float _turnDirection;
-    public static bool testing = false;
+    public bool testing = false;
     
 
     private void Awake()
@@ -118,11 +118,11 @@ public class Player : MonoBehaviour
         {
             gameoverPanel.SetActive(false);
         }
-
         Time.timeScale = 1;
         isDead = false;
+        life = 3;
+        score = 0;
         SceneManager.LoadScene(1);
-        
     }
     public void Quit()
     {
